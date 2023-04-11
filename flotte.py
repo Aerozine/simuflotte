@@ -60,7 +60,7 @@ return the psi matrix
                 col[index] = tcol[i] - 1
                 index += 1
             bindex += 1
-    maxsize = np.max(num)
+    maxsize = (dom.shape[0]-2)*(dom.shape[1]-2)
     A = sc.csc_matrix((data, (row, col)), shape=(maxsize, maxsize))
     X = sc.linalg.spsolve(A, btot)
     psi = np.zeros_like(num)

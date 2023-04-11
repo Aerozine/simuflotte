@@ -6,10 +6,10 @@ def findCL(dom,h):
     cl=np.zeros_like(dom)
     #conditions au limites
     cl[:][0].fill(Q)
-    cl[0][:]=np.arange(0,dom.shape[1]+h,h)
-    cl[-1][:]=np.arange(0,dom.shape[1]+h,h)
+    cl[:][0]=np.arange(0,h*dom.shape[1],h)
+    cl[:][-1]=np.arange(0,h*dom.shape[1],h)
     tmp=cl[2:-2][2:-2]
-    x,y=firstnumber(cl)
+    x,y=firstnumber(dom,cl)
     width=0
     while(cl[x][y+width]!=0):
         width+=1
@@ -17,9 +17,10 @@ def findCL(dom,h):
     for i in range(2,cl.shape[0]-2):
         for j in range(2, cl.shape[1] - 2):
             if(dom[i][j]!=1):
-                cl[i][j]
-def firstnumber(cl):
+                cl[i][j]=qfill
+    return cl
+def firstnumber(dom,cl):
     for x in range(2,cl.shape[0]-2):
         for y in range(2, cl.shape[1] - 2):
-            if(cl[x][y]!=0):
-                return x,y
+            if(dom[x][y]!=1):
+                return (x,y)
