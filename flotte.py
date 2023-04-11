@@ -1,7 +1,9 @@
 import numpy as np
 import scipy.sparse as sc
+
 g = 9.81
 rho = 1000
+
 
 def getCoeff(num_left, num_right, num_down, num_up, num_cent, type_cent, cl_cent):
     """
@@ -44,7 +46,7 @@ return the psi matrix
             elif 2 == element:
                 ndata += 1  # ndata=number of data in the new matrix
     data, row, col = np.empty(ndata), np.empty(ndata), np.empty(ndata)
-    btot = np.empty(int(np.max(num)))#np.empty(((dom.shape[0] - 2) * (dom.shape[1] - 2)))
+    btot = np.empty(int(np.max(num)))  # np.empty(((dom.shape[0] - 2) * (dom.shape[1] - 2)))
     index = 0  # index of data
     bindex = 0  # actual line index of b and A
     for x in range(1, dom.shape[0] - 1):  # skip  side bc =0
@@ -66,7 +68,8 @@ return the psi matrix
     psi = np.zeros_like(dom)
     for i in range(num.shape[0]):
         for j in range(num.shape[1]):
-            psi[i][j] = X[num[i][j] - 1]
+            if dom[i][j] != 0:
+                psi[i][j] = X[num[i][j] - 1]
     return psi
 
 

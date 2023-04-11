@@ -5,9 +5,9 @@ Q=8
 def findCL(dom,h):
     cl=np.zeros_like(dom,dtype=float)
     #conditions au limites
-    cl[0,:].fill(Q)
-    cl[:,0]=np.linspace(8,0,dom.shape[0])
-    cl[:,-1]=np.linspace(8,0,dom.shape[0])
+    cl[1,:].fill(Q)
+    cl[:,1]=np.linspace(8,0,dom.shape[0])
+    cl[:,-2]=np.linspace(8,0,dom.shape[0])
     tmp=cl[2:-2][2:-2]
     x,y=firstnumber(dom,cl)
     width=0
@@ -17,7 +17,7 @@ def findCL(dom,h):
     for i in range(2,cl.shape[0]-2):
         for j in range(2, cl.shape[1] - 2):
             if(dom[i,j]==2):
-                cl[i,j]=cl[yfill,0]
+                cl[i,j]=cl[yfill,1]
     return cl
 def firstnumber(dom,cl):
     for x in range(2,cl.shape[0]-2):
