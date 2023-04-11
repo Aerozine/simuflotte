@@ -16,7 +16,7 @@ def findCL(dom,h):
     yfill=cl.shape[1]-y-int(width/2)+1
     for i in range(2,cl.shape[0]-2):
         for j in range(2, cl.shape[1] - 2):
-            if(dom[i,j]!=1):
+            if(dom[i,j]==2):
                 cl[i,j]=cl[yfill,0]
     return cl
 def firstnumber(dom,cl):
