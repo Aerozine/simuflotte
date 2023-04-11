@@ -3,11 +3,11 @@ import numpy as np
 Q=8
 
 def findCL(dom,h):
-    cl=np.zeros_like(dom)
+    cl=np.zeros_like(dom,dtype=float)
     #conditions au limites
-    cl[:][0].fill(Q)
-    cl[:][0]=np.arange(0,h*dom.shape[1],h)
-    cl[:][-1]=np.arange(0,h*dom.shape[1],h)
+    cl[0,:].fill(Q)
+    cl[:,0]=np.linspace(8,0,dom.shape[0])
+    cl[:,-1]=np.linspace(8,0,dom.shape[0])
     tmp=cl[2:-2][2:-2]
     x,y=firstnumber(dom,cl)
     width=0
