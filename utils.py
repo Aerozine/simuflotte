@@ -13,11 +13,11 @@ def findCL(dom,h):
     width=0
     while(cl[x][y+width]!=0):
         width+=1
-    qfill=(cl.shape[1]-y-int(width/2)+1)*h
+    yfill=cl.shape[1]-y-int(width/2)+1
     for i in range(2,cl.shape[0]-2):
         for j in range(2, cl.shape[1] - 2):
-            if(dom[i][j]!=1):
-                cl[i][j]=qfill
+            if(dom[i,j]!=1):
+                cl[i,j]=cl[yfill,0]
     return cl
 def firstnumber(dom,cl):
     for x in range(2,cl.shape[0]-2):

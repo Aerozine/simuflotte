@@ -44,7 +44,7 @@ return the psi matrix
             elif 2 == element:
                 ndata += 1  # ndata=number of data in the new matrix
     data, row, col = np.empty(ndata), np.empty(ndata), np.empty(ndata)
-    btot = np.empty(np.max(num))#np.empty(((dom.shape[0] - 2) * (dom.shape[1] - 2)))
+    btot = np.empty(int(np.max(num)))#np.empty(((dom.shape[0] - 2) * (dom.shape[1] - 2)))
     index = 0  # index of data
     bindex = 0  # actual line index of b and A
     for x in range(1, dom.shape[0] - 1):  # skip  side bc =0
@@ -60,7 +60,7 @@ return the psi matrix
                 col[index] = tcol[i] - 1
                 index += 1
             bindex += 1
-    maxsize = np.max(num)
+    maxsize = int(np.max(num))
     A = sc.csc_matrix((data, (row, col)), shape=(maxsize, maxsize))
     X = sc.linalg.spsolve(A, btot)
     psi = np.zeros_like(num)
