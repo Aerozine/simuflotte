@@ -150,8 +150,8 @@ Calcule la vélocité en utilisant la dérivée
     for i in range(psi.shape[0]):
         for j in range(psi.shape[1]):
             if 0 != dom[i][j]:
-                v[i][j] = -deriv(psi[i - 1][j], psi[i][j], psi[i + 1][j], dom[i - 1][j], dom[i][j], dom[i + 1][j], h)
-                u[i][j] = deriv(psi[i][j - 1], psi[i][j], psi[i][j + 1], dom[i][j - 1], dom[i][j], dom[i][j + 1], h)
+                v[i][j] = -deriv(psi[i][j - 1], psi[i][j], psi[i][j + 1], dom[i][j - 1], dom[i][j], dom[i][j + 1], h)
+                u[i][j] = deriv(psi[i - 1][j], psi[i][j], psi[i + 1][j], dom[i - 1][j], dom[i][j], dom[i + 1][j], h)
     return u, v
 
 
