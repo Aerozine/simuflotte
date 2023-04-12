@@ -23,8 +23,10 @@ def fig1(dom, cl, num):
 
     #plt.streamplot(y,x, v, u, color="#000000", arrowstyle='-', minlength=0.3, broken_streamlines=False,arrowsize=0.1)
     #plt.pcolor(psi.T, cmap='turbo')
-    #plt.colorbar()
-
+    plt.colorbar()
+    plt.xlabel('Axe y')
+    plt.ylabel('Axe x')
+    plt.savefig("pressure4.png")
     plt.show()
 
 

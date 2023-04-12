@@ -5,7 +5,7 @@ import genfig as fig
 import utils
 import scipy.sparse as sc
 # path = os.path.abspath(os.getcwd())
-cl, dom, num = utils.loadfile(3, cl=False)
+cl, dom, num = utils.loadfile(4, cl=False)
 cl = utils.findCL(dom, 2)
 """
 contour=np.loadtxt("4-contourObj.txt")
