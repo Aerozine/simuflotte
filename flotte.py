@@ -187,8 +187,8 @@ def genpressure(u,v,dom,case4=False):
         tabx=contour[:,0]
         taby=contour[:,1]
         print(tabx.shape)
-    U=np.empty_like(tabx)
-    V = np.empty_like(tabx)
+    U=np.empty_like(tabx,dtype=float)
+    V = np.empty_like(tabx,dtype=float)
     for i in range(tabx.shape[0]):
         U[i]=u[int(tabx[i]),int(taby[i])]
         V[i]=v[int(tabx[i]),int(taby[i])]

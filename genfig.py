@@ -14,8 +14,9 @@ def fig1(dom, cl, num):
 
     Pp,Px,Py,Pu,Pv=plouf.genpressure(u,v,dom,case4=False)
     plt.pcolor(plouf.pressure(u.T,v.T), cmap='turbo')
-    #print(plouf.force(Pp,Px,Py))
+    print(plouf.force(Pp,Px,Py))
     print(plouf.circu(Pu,Pv,Px,Py))
+    print(plouf.circu(Pv,Pu,Px,Py))
     u=u.T
     v=v.T
     #plt.colorbar()
