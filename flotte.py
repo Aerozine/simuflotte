@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.sparse as sc
+import utils
 
 g = 9.81
 rho = 1000
@@ -109,11 +110,9 @@ def circu(u, v, x, y):
     :param y:
     :return:
     """
-    n = len(x)
     c = 0
-    for i in range(n - 1):
+    for i in range(x.shape[0]-1):
         if x[i] == x[i + 1]:
-            # c+=(x[i+1]-x[i])*(u[i+1]+u[i])/2
             c += (y[i + 1] - y[i]) * (v[i + 1] + v[i]) / 2
         if y[i] == y[i + 1]:
             c += (x[i + 1] - x[i]) * (u[i + 1] + u[i]) / 2
@@ -164,3 +163,34 @@ Calcule le tableau des pressions à partir des vitesses grace à l'équation de 
     """
     U = v ** 2 + u ** 2
     return -rho * U / 2
+
+def genpressure(u,v,dom,case4=False):
+    if(case4==False):
+        x,y=utils.firstnumber(dom)
+        xdiff=0
+        ydiff=0
+        while(dom[x+xdiff,y]==2):
+            xdiff+=1
+        while(dom[x,y+ydiff]==2):
+            ydiff+=1
+        xdiff-=1
+        ydiff-=1
+        #obscure method to trace a rectangle
+        tabx=np.append(np.arange(x,x+xdiff+1),np.full(ydiff,x+xdiff))
+        taby=np.append(np.full(xdiff,y),np.arange(y,y+ydiff+1))
+        tabx = np.append(tabx, np.arange(x + xdiff - 1, x, -1))
+        taby=np.append(taby,np.full(xdiff-1,y+ydiff))
+        tabx = np.append(tabx, np.full(ydiff+1, x))
+        taby=np.append(taby,np.arange(y+ydiff,y-1,-1))
+    else:
+        contour=np.loadtxt("4-contourObj.txt")
+        tabx=contour[:,0]
+        taby=contour[:,1]
+        print(tabx.shape)
+    U=np.empty_like(tabx)
+    V = np.empty_like(tabx)
+    for i in range(tabx.shape[0]):
+        U[i]=u[int(tabx[i]),int(taby[i])]
+        V[i]=v[int(tabx[i]),int(taby[i])]
+    return pressure(U,V),tabx,taby,U,V
+
