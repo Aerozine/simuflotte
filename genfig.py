@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import  utils
-import flotte as plouf
+import fluides as plouf
 
 
 def figstream(dom, cl, num, number, show=False):
@@ -27,6 +27,8 @@ def figpressure(dom, cl, num, number, show=False):
     u, v = plouf.velocity(dom, psi, 2)
     plt.pcolor(plouf.pressure(u.T, v.T), cmap='turbo')
     plt.colorbar()
+    plt.xlabel('Axe x')
+    plt.ylabel('Axe y')
     plt.savefig("pictures/pressure" + str(number) + ".png", bbox_inches='tight')
     if show:
         plt.show(block=False)
