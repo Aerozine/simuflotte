@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.sparse as sc
-
+import scipy.sparse.linalg
 import utils
 
 g = 9.81
