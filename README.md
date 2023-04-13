@@ -1,3 +1,2 @@
-#projet de mécanique des fluides
-simulation d'un ilot
+# projet de mécanique des fluides
 ![alt text](pictures/stream4.png)
