@@ -1,4 +1,4 @@
-# element of fluid mechanics
+# element of fluid mechanics:irrotational flow project
 ![alt text](pictures/stream4.png)
 # how to use it
 to install the required dependencies:
