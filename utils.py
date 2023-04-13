@@ -13,7 +13,7 @@ def loadfile(i, cl=True, path=os.path.abspath(os.getcwd())):
     return cl, dom, num
 
 
-def findCL(dom):
+def findCL(dom, u=None):
     cl = np.zeros_like(dom, dtype=np.float64)
     # conditions au limites
     cl[1:-1, -2].fill(Q)
@@ -23,11 +23,14 @@ def findCL(dom):
     width = 0
     while dom[y][x + width] != 1:
         width += 1
-    xfill = x + int(width / 2)
+    # xfill = x + int(width / 2)
     for i in range(2, cl.shape[0] - 2):
         for j in range(2, cl.shape[1] - 2):
             if dom[i, j] == 2:
-                cl[i, j] = cl[1, xfill]
+                if u == None:
+                    cl[i, j] = cl[1, xfill]
+                else:
+                    cl[i, j] = u
     return cl
 
 
@@ -73,3 +76,30 @@ def getInterestPoint(u, v, dom, case4=False, contourpath="data/4-contourObj.txt"
         U[i] = u[int(tabx[i]), int(taby[i])]
         V[i] = v[int(tabx[i]), int(taby[i])]
     return tabx, taby, U, V
+
+
+def bissection(f, x0, x1, tol):
+    x = 0
+    statut = 0
+    tab = [x, statut]
+    x_0 = x0
+    x_1 = x1
+    f_x0 = f(x0)
+    f_x1 = f(x1)
+    while abs(f_x0 - f_x1) > tol:
+        x2 = (x_0 + x_1) / 2
+        f_x2 = f(x2)
+        if f_x0 * f_x2 < 0:
+            x_0 = x_0
+            x_1 = x2
+            f_x1 = f_x2
+        elif f_x1 * f_x2 < 0:
+            x_1 = x_1
+            x_0 = x2
+            f_x0 = f_x2
+        else:
+            print("Valeur trouvée sans approximation")
+            tab = [x2, 0]
+            return tab
+    tab = [x2, 0]
+    return tab
