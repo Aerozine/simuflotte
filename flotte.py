@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.sparse as sc
+
 import utils
 
 g = 9.81
@@ -7,17 +8,6 @@ rho = 1000
 
 
 def getCoeff(num_left, num_right, num_down, num_up, num_cent, type_cent, cl_cent):
-    """
-
-    :param num_left:
-    :param num_right:
-    :param num_down:
-    :param num_up:
-    :param num_cent:
-    :param type_cent:
-    :param cl_cent:
-    :return:
-    """
     if type_cent == 1:
         a = np.mat([[1], [1], [1], [1], [-4]])
         j = np.mat([[num_left], [num_right], [num_down], [num_up], [num_cent]])
@@ -32,13 +22,6 @@ def getCoeff(num_left, num_right, num_down, num_up, num_cent, type_cent, cl_cent
 
 
 def laplace(dom, cl, num):
-    """
-return the psi matrix
-    :param dom: dom file
-    :param cl: cl file
-    :param num: num file
-    :return: PSI
-    """
     ndata = 0
     for line in dom:
         for element in line:
@@ -75,17 +58,6 @@ return the psi matrix
 
 
 def deriv(f_left, f_c, f_right, type_left, type_c, type_right, h):
-    """
-
-    :param f_left:
-    :param f_c:
-    :param f_right:
-    :param type_left:
-    :param type_c:
-    :param type_right:
-    :param h:
-    :return:
-    """
     v = 0
     if type_c == 0:
         return 0
@@ -102,16 +74,8 @@ def deriv(f_left, f_c, f_right, type_left, type_c, type_right, h):
 
 
 def circu(u, v, x, y):
-    """
-
-    :param u:
-    :param v:
-    :param x:
-    :param y:
-    :return:
-    """
     c = 0
-    for i in range(x.shape[0]-1):
+    for i in range(x.shape[0] - 1):
         if x[i] == x[i + 1]:
             c += (y[i + 1] - y[i]) * (v[i + 1] + v[i]) / 2
         if y[i] == y[i + 1]:
@@ -120,13 +84,6 @@ def circu(u, v, x, y):
 
 
 def force(p, x, y):
-    """
-Calcule la force
-    :param p: tableau des pressions
-    :param x: trajectoire selon x
-    :param y: trajectoire selon y
-    :return: (fx,fy) projection de la force selon x et y
-    """
     fx = fy = 0
     for i in range(x.shape[0] - 1):
         if x[i] == x[i + 1]:
@@ -137,13 +94,6 @@ Calcule la force
 
 
 def velocity(dom, psi, h):
-    """
-Calcule la vélocité en utilisant la dérivée
-    :param dom: matrice dom
-    :param psi: matrice psi
-    :param h: tolérance
-    :returns: (u, v) tableau des vitesses selon x et y
-    """
     u = np.zeros_like(psi)
     v = np.zeros_like(psi)
     for i in range(psi.shape[0]):
@@ -155,42 +105,39 @@ Calcule la vélocité en utilisant la dérivée
 
 
 def pressure(u, v):
-    """
-Calcule le tableau des pressions à partir des vitesses grace à l'équation de Bernoulli
-    :param u: Vitesse selon x
-    :param v: Vitesse selon y
-    :return: le tableau des pressions
-    """
     U = v ** 2 + u ** 2
     return -rho * U / 2
 
-def genpressure(u,v,dom,case4=False):
-    if(case4==False):
-        x,y=utils.firstnumber(dom)
-        xdiff=0
-        ydiff=0
-        while(dom[x+xdiff,y]==2):
-            xdiff+=1
-        while(dom[x,y+ydiff]==2):
-            ydiff+=1
-        xdiff-=1
-        ydiff-=1
-        #obscure method to trace a rectangle
-        tabx=np.append(np.arange(x,x+xdiff+1),np.full(ydiff,x+xdiff))
-        taby=np.append(np.full(xdiff,y),np.arange(y,y+ydiff+1))
-        tabx = np.append(tabx, np.arange(x + xdiff - 1, x, -1))
-        taby=np.append(taby,np.full(xdiff-1,y+ydiff))
-        tabx = np.append(tabx, np.full(ydiff+1, x))
-        taby=np.append(taby,np.arange(y+ydiff,y-1,-1))
-    else:
-        contour=np.loadtxt("4-contourObj.txt")
-        tabx=contour[:,0]
-        taby=contour[:,1]
-        print(tabx.shape)
-    U=np.empty_like(tabx,dtype=float)
-    V = np.empty_like(tabx,dtype=float)
-    for i in range(tabx.shape[0]):
-        U[i]=u[int(tabx[i]),int(taby[i])]
-        V[i]=v[int(tabx[i]),int(taby[i])]
-    return pressure(U,V),tabx,taby,U,V
 
+def genpressure(u, v, dom, case4=False,contourpath="data/4-contourObj.txt"):
+    if not case4:
+        x, y = utils.firstnumber(dom)
+        xdiff = 0
+        ydiff = 0
+        while dom[x + xdiff, y] == 2:
+            xdiff += 1
+        while dom[x, y + ydiff] == 2:
+            ydiff += 1
+        xdiff -= 1
+        ydiff -= 1
+        # obscure method to trace a rectangle
+        tabx = np.concatenate((np.arange(x, x + xdiff + 1),
+                               np.full(ydiff, x + xdiff),
+                               np.arange(x + xdiff - 1, x, -1),
+                               np.full(ydiff + 1, x)
+                               ), axis=None)
+        taby = np.concatenate((np.full(xdiff, y),
+                               np.arange(y, y + ydiff + 1),
+                               np.full(xdiff - 1, y + ydiff),
+                               np.arange(y + ydiff, y - 1, -1)
+                               ), axis=None)
+    else:
+        contour = np.loadtxt(contourpath)
+        tabx = contour[:, 0]
+        taby = contour[:, 1]
+    U = np.empty_like(tabx, dtype=float)
+    V = np.empty_like(tabx, dtype=float)
+    for i in range(tabx.shape[0]):
+        U[i] = u[int(tabx[i]), int(taby[i])]
+        V[i] = v[int(tabx[i]), int(taby[i])]
+    return pressure(U, V), tabx, taby, U, V
