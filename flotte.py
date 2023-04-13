@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.sparse as sc
 import scipy.sparse.linalg
-import utils
 
 g = 9.81
 rho = 1000
@@ -107,37 +106,3 @@ def velocity(dom, psi, h):
 def pressure(u, v):
     U = v ** 2 + u ** 2
     return -rho * U / 2
-
-
-def genpressure(u, v, dom, case4=False,contourpath="data/4-contourObj.txt"):
-    if not case4:
-        x, y = utils.firstnumber(dom)
-        xdiff = 0
-        ydiff = 0
-        while dom[x + xdiff, y] == 2:
-            xdiff += 1
-        while dom[x, y + ydiff] == 2:
-            ydiff += 1
-        xdiff -= 1
-        ydiff -= 1
-        # obscure method to trace a rectangle
-        tabx = np.concatenate((np.arange(x, x + xdiff + 1),
-                               np.full(ydiff, x + xdiff),
-                               np.arange(x + xdiff - 1, x, -1),
-                               np.full(ydiff + 1, x)
-                               ), axis=None)
-        taby = np.concatenate((np.full(xdiff, y),
-                               np.arange(y, y + ydiff + 1),
-                               np.full(xdiff - 1, y + ydiff),
-                               np.arange(y + ydiff, y - 1, -1)
-                               ), axis=None)
-    else:
-        contour = np.loadtxt(contourpath)
-        tabx = contour[:, 0]
-        taby = contour[:, 1]
-    U = np.empty_like(tabx, dtype=float)
-    V = np.empty_like(tabx, dtype=float)
-    for i in range(tabx.shape[0]):
-        U[i] = u[int(tabx[i]), int(taby[i])]
-        V[i] = v[int(tabx[i]), int(taby[i])]
-    return pressure(U, V), tabx, taby, U, V

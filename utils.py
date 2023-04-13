@@ -2,23 +2,21 @@ import os
 
 import numpy as np
 
-import flotte as plouf
-
 Q = 8
 
 
 def loadfile(i, cl=True, path=os.path.abspath(os.getcwd())):
     if cl:
-        cl = np.loadtxt(path + "/data/" + str(i) + "-cl.txt", dtype=float)
-    dom = np.loadtxt(path + "/data/" + str(i) + "-dom.txt", dtype=float)
+        cl = np.loadtxt(path + "/data/" + str(i) + "-cl.txt", dtype=np.float64)
+    dom = np.loadtxt(path + "/data/" + str(i) + "-dom.txt", dtype=np.float64)
     num = np.loadtxt(path + "/data/" + str(i) + "-num.txt", dtype=int)
     return cl, dom, num
 
 
 def findCL(dom):
-    cl = np.zeros_like(dom, dtype=float)
+    cl = np.zeros_like(dom, dtype=np.float64)
     # conditions au limites
-    cl[:, -2].fill(Q)
+    cl[1:-1, -2].fill(Q)
     cl[1, 1:-1] = np.linspace(0, Q, dom.shape[1] - 2)
     cl[-2, 1:-1] = np.linspace(0, Q, dom.shape[1] - 2)
     y, x = firstnumber(dom)
@@ -40,11 +38,38 @@ def firstnumber(dom):
                 return i, j
 
 
-def getFC(dom, cl, num, number):
-    # returns the Force and the circulation
-    psi = plouf.laplace(dom, cl, num)
-    u, v = plouf.velocity(dom, psi, 2)
-    Pp, Px, Py, Pu, Pv = plouf.genpressure(u, v, dom, case4=(number == 4))
-    F = plouf.force(Pp, Px, Py)
-    # matrix notation to cartesian
-    return (F[1], F[0]), plouf.circu(Pv, Pu, Px, Py)
+def getInterestPoint(u, v, dom, case4=False, contourpath="data/4-contourObj.txt"):
+    # compute the circulation over the body
+    if not case4:
+        x, y = firstnumber(dom)
+        xdiff = 0
+        ydiff = 0
+        while dom[x + xdiff, y] == 2:
+            xdiff += 1
+        while dom[x, y + ydiff] == 2:
+            ydiff += 1
+        x -= 1
+        y -= 1
+        # obscure method to trace a rectangle
+        xdiff += 1
+        ydiff += 1
+        a = np.arange(x, x + xdiff)
+        e = np.full_like(a, y)
+        f = np.arange(y, y + ydiff)
+        b = np.full_like(f, x + xdiff)
+        c = np.arange(x + xdiff, x, -1)
+        g = np.full_like(c, y + ydiff)
+        h = np.arange(y + ydiff, y, -1)
+        d = np.full_like(h, x)
+        tabx = np.concatenate((a, b, c, d, x), axis=None)
+        taby = np.concatenate((e, f, g, h, y), axis=None)
+    else:
+        contour = np.loadtxt(contourpath)
+        tabx = contour[:, 0]
+        taby = contour[:, 1]
+    U = np.empty_like(tabx, dtype=np.float64)
+    V = np.empty_like(tabx, dtype=np.float64)
+    for i in range(tabx.shape[0]):
+        U[i] = u[int(tabx[i]), int(taby[i])]
+        V[i] = v[int(tabx[i]), int(taby[i])]
+    return tabx, taby, U, V

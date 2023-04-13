@@ -31,3 +31,13 @@ def figpressure(dom, cl, num, number, show=False):
     if show:
         plt.show(block=False)
     plt.close()
+
+
+def getFC(dom, cl, num, number):
+    # returns the Force and the circulation
+    psi = plouf.laplace(dom, cl, num)
+    u, v = plouf.velocity(dom, psi, 2)
+    Ix, Iy, Iu, Iv = plouf.getIntrestPoint(u, v, dom, case4=(number == 4))
+    Ip = plouf.pressure(Iu, Iv)
+    F = plouf.force(Ip, Ix, Iy)
+    return F, plouf.circu(Iu, Iv, Iy, Ix)
