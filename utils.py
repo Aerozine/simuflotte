@@ -23,14 +23,14 @@ def findCL(dom, u=None):
     width = 0
     while dom[y][x + width] != 1:
         width += 1
-    # xfill = x + int(width / 2)
+    xfill = x + int(width / 2)
     for i in range(2, cl.shape[0] - 2):
         for j in range(2, cl.shape[1] - 2):
             if dom[i, j] == 2:
-                if u == None:
-                    cl[i, j] = cl[1, xfill]
-                else:
+                if u is not None:
                     cl[i, j] = u
+                else:
+                    cl[i, j] = cl[1, xfill]
     return cl
 
 

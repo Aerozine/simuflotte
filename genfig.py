@@ -1,7 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import  utils
+
 import fluides as plouf
+import utils
 
 
 def figstream(dom, cl, num, number, show=False):
